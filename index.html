@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>StumpMetrics</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="top-bar">
+    <img src="images/logos/stumpmetricslogo_white.png"
+         class="logo-corner"
+         onclick="toggleMenu()">
+    <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+</div>
+
+<div id="menu" class="menu hidden">
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('clubs')">Clubs</button>
+</div>
+
+<div id="home" class="page active home-hero">
+    <img src="images/logos/stumpmetricsnobackground.png" class="home-logo">
+    <h1>StumpMetrics</h1>
+    <p>Grassroots cricket analytics built for insight, not admin.</p>
+    <button class="primary-btn" onclick="showPage('clubs')">View Clubs</button>
+</div>
+
+<div id="clubs" class="page">
+    <h2>Clubs</h2>
+    <div class="club-card" onclick="openClubTeams()">
+        <h3>Neath Cricket Club</h3>
+    </div>
+</div>
+
+<div id="neathClub" class="page">
+    <div class="breadcrumb">
+        <span onclick="showPage('clubs')">Clubs</span> > Neath CC
+    </div>
+
+    <img src="images/clubbadges/neathccbadge.jpg" class="club-logo">
+    <h2>Select a Team</h2>
+
+    <div class="team-grid">
+        <div class="team-card" onclick="openTeam()">1st XI</div>
+    </div>
+</div>
+
+<div id="neath" class="page">
+
+    <div class="breadcrumb">
+        <span onclick="showPage('clubs')">Clubs</span> >
+        <span onclick="openClubTeams()">Neath CC</span> >
+        1st XI
+    </div>
+
+    <img id="clubLogo" class="club-logo">
+    <h2 class="club-title"></h2>
+
+    <div class="highlights">
+        <div class="highlight-card">
+            <h4>Top Run Scorer</h4>
+            <p id="topRuns">0</p>
+        </div>
+        <div class="highlight-card">
+            <h4>Most Wickets</h4>
+            <p id="topWickets">0</p>
+        </div>
+        <div class="highlight-card">
+            <h4>Performance Leader</h4>
+            <p id="performanceLeader">0</p>
+        </div>
+    </div>
+
+    <div class="stats-card">
+        <h3>Performance Insights</h3>
+        <ul id="insightList"></ul>
+    </div>
+
+    <div class="stats-card">
+        <h3>Performance Rankings</h3>
+        <table id="rankingTable">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Score</th>
+                    <th>Tier</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="stats-card">
+        <h3>Batting</h3>
+        <canvas id="battingChart"></canvas>
+        <canvas id="scatterChart"></canvas>
+        <table id="battingTable">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Runs</th>
+                    <th>Average</th>
+                    <th>Strike Rate</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="stats-card">
+        <h3>Bowling</h3>
+        <canvas id="bowlingChart"></canvas>
+        <table id="bowlingTable">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Wickets</th>
+                    <th>Economy</th>
+                    <th>Average</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

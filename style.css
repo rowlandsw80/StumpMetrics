@@ -1,0 +1,348 @@
+/* =========================================
+   ROOT BRAND VARIABLES
+========================================= */
+
+:root {
+    --sm-primary: #1F4D2B;
+    --sm-accent: #F28C18;
+    --sm-light: #f4f4f4;
+    --sm-dark: #172643;
+    --card-bg: #ffffff;
+}
+
+/* =========================================
+   GLOBAL
+========================================= */
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--sm-light);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.page {
+    display: none;
+    padding: 120px 40px 60px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.page.active {
+    display: block;
+}
+
+/* =========================================
+   TOP BAR
+========================================= */
+
+.top-bar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    background: var(--sm-primary);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 1000;
+}
+
+.logo-corner {
+    height: 36px;
+    cursor: pointer;
+}
+
+.dark-toggle {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* =========================================
+   MENU
+========================================= */
+
+.menu {
+    position: fixed;
+    top: 60px;
+    left: 20px;
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.hidden {
+    display: none;
+}
+
+.menu button {
+    display: block;
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+}
+
+.menu button:hover {
+    background: #f0f0f0;
+}
+
+/* =========================================
+   HOME PAGE
+========================================= */
+
+.home-hero {
+    text-align: center;
+}
+
+.home-logo {
+    max-width: 180px;
+    margin-bottom: 20px;
+}
+
+.primary-btn {
+    padding: 12px 30px;
+    background: var(--sm-accent);
+    border: none;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.2s ease;
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   CARDS
+========================================= */
+
+.club-card,
+.team-card,
+.stats-card,
+.highlight-card,
+.coming-soon-card {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: 0.2s ease;
+}
+
+.club-card:hover,
+.team-card:hover {
+    transform: translateY(-4px);
+    cursor: pointer;
+}
+
+/* =========================================
+   TEAM GRID
+========================================= */
+
+.team-grid {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.team-card {
+    flex: 1;
+    text-align: center;
+}
+
+/* =========================================
+   BREADCRUMB
+========================================= */
+
+.breadcrumb {
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.breadcrumb span {
+    cursor: pointer;
+    color: var(--sm-primary);
+}
+
+/* =========================================
+   HIGHLIGHTS
+========================================= */
+
+.highlights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+    gap: 20px;
+}
+
+.highlight-card h4 {
+    margin: 0 0 10px 0;
+}
+
+.highlight-card p {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* =========================================
+   DASHBOARD TABS
+========================================= */
+
+.dashboard-tabs {
+    display: flex;
+    gap: 10px;
+    margin: 30px 0;
+}
+
+.tab-btn {
+    padding: 10px 18px;
+    border: none;
+    background: #ddd;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.active-tab {
+    background: var(--sm-accent);
+    color: white;
+}
+
+/* =========================================
+   TABLES
+========================================= */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background: #f0f0f0;
+}
+
+tr:hover {
+    background: #fafafa;
+}
+
+/* =========================================
+   COMPARISON TOOL
+========================================= */
+
+#comparisonResult {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+/* =========================================
+   SEASON SELECTOR
+========================================= */
+
+.season-selector {
+    margin: 20px 0;
+}
+
+.season-selector select {
+    padding: 6px;
+}
+
+/* =========================================
+   ADMIN UPLOAD
+========================================= */
+
+.stats-card input[type="file"] {
+    display: block;
+    margin: 10px 0;
+}
+
+/* =========================================
+   DARK MODE
+========================================= */
+
+body.dark {
+    background: #111;
+    color: #eee;
+}
+
+body.dark .stats-card,
+body.dark .highlight-card,
+body.dark .club-card,
+body.dark .team-card,
+body.dark .coming-soon-card {
+    background: #1c1c1c;
+}
+
+body.dark th {
+    background: #222;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+    .team-grid {
+        flex-direction: column;
+    }
+
+    .dashboard-tabs {
+        flex-direction: column;
+    }
+}
+
+#insightCard ul {
+    padding-left: 20px;
+    margin: 0;
+}
+
+#insightCard li {
+    margin-bottom: 8px;
+}
+
+#rankingTable tr:nth-child(1) { background: #ffd70033; }
+#rankingTable tr:nth-child(2) { background: #c0c0c033; }
+#rankingTable tr:nth-child(3) { background: #cd7f3233; }
+
+.tier-elite { color: #2e7d32; font-weight: bold; }
+.tier-strong { color: #f28c18; font-weight: bold; }
+.tier-support { color: #555; }
+
+/* ================================
+   ROLE BADGES
+================================ */
+
+.role-badge {
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+
+.role-power { background: #d32f2f; }
+.role-anchor { background: #1976d2; }
+.role-finisher { background: #f57c00; }
+.role-engine { background: #2e7d32; }
+
+.role-strike { background: #6a1b9a; }
+.role-economy { background: #00838f; }
+.role-workhorse { background: #5d4037; }
+
+.tier-elite { color: #2e7d32; font-weight: bold; }
+.tier-strong { color: #f28c18; font-weight: bold; }
+.tier-support { color: #555; }
