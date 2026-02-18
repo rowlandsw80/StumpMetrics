@@ -5,20 +5,18 @@
 :root {
     --sm-primary: #1F4D2B;
     --sm-accent: #F28C18;
-    --sm-light: #f4f4f4;
-    --sm-dark: #172643;
-    --card-bg: #ffffff;
+    --card-bg: #161f2b;
 }
 
 /* =========================================
-   GLOBAL
+   GLOBAL (DARK BROADCAST DEFAULT)
 ========================================= */
 
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    background: var(--sm-light);
-    transition: background 0.3s ease, color 0.3s ease;
+    background: #0f1720;
+    color: #e6edf3;
 }
 
 .page {
@@ -41,7 +39,8 @@ body {
     top: 0;
     width: 100%;
     height: 60px;
-    background: var(--sm-primary);
+    background: #1F4D2B;   /* StumpMetrics green */
+    border-bottom: 1px solid #243247;
     display: flex;
     align-items: center;
     padding: 0 20px;
@@ -70,10 +69,11 @@ body {
     position: fixed;
     top: 60px;
     left: 20px;
-    background: white;
+    background: #161f2b;
+    border: 1px solid #243247;
     padding: 12px;
     border-radius: 8px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
 .hidden {
@@ -88,10 +88,11 @@ body {
     cursor: pointer;
     width: 100%;
     text-align: left;
+    color: #e6edf3;
 }
 
 .menu button:hover {
-    background: #f0f0f0;
+    background: #1a2534;
 }
 
 /* =========================================
@@ -123,7 +124,7 @@ body {
 }
 
 /* =========================================
-   CARDS
+   CARDS (BROADCAST STYLE)
 ========================================= */
 
 .club-card,
@@ -131,12 +132,13 @@ body {
 .stats-card,
 .highlight-card,
 .coming-soon-card {
-    background: var(--card-bg);
+    background: #161f2b;
+    border: 1px solid #243247;
     padding: 25px;
-    border-radius: 10px;
+    border-radius: 12px;
     margin: 20px 0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    transition: 0.2s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    transition: 0.25s ease;
 }
 
 .club-card:hover,
@@ -171,11 +173,11 @@ body {
 
 .breadcrumb span {
     cursor: pointer;
-    color: var(--sm-primary);
+    color: var(--sm-accent);
 }
 
 /* =========================================
-   HIGHLIGHTS
+   HIGHLIGHTS (BROADCAST KPI STYLE)
 ========================================= */
 
 .highlights {
@@ -186,34 +188,14 @@ body {
 
 .highlight-card h4 {
     margin: 0 0 10px 0;
+    font-weight: 500;
+    color: #9fb3c8;
 }
 
 .highlight-card p {
-    font-size: 28px;
-    font-weight: bold;
-}
-
-/* =========================================
-   DASHBOARD TABS
-========================================= */
-
-.dashboard-tabs {
-    display: flex;
-    gap: 10px;
-    margin: 30px 0;
-}
-
-.tab-btn {
-    padding: 10px 18px;
-    border: none;
-    background: #ddd;
-    cursor: pointer;
-    border-radius: 6px;
-}
-
-.active-tab {
-    background: var(--sm-accent);
-    color: white;
+    font-size: 32px;
+    font-weight: 700;
+    color: #F28C18;
 }
 
 /* =========================================
@@ -226,27 +208,18 @@ table {
     margin-top: 20px;
 }
 
+th {
+    background: #1f2a3a;
+}
+
 th, td {
     padding: 10px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #243247;
     text-align: center;
 }
 
-th {
-    background: #f0f0f0;
-}
-
 tr:hover {
-    background: #fafafa;
-}
-
-/* =========================================
-   COMPARISON TOOL
-========================================= */
-
-#comparisonResult {
-    margin-top: 15px;
-    font-weight: bold;
+    background: #1a2534;
 }
 
 /* =========================================
@@ -259,72 +232,26 @@ tr:hover {
 
 .season-selector select {
     padding: 6px;
+    background: #161f2b;
+    color: white;
+    border: 1px solid #243247;
 }
 
 /* =========================================
-   ADMIN UPLOAD
+   RANKING HIGHLIGHTS
 ========================================= */
 
-.stats-card input[type="file"] {
-    display: block;
-    margin: 10px 0;
-}
+#rankingTable tr:nth-child(1) { background: #ffd70022; }
+#rankingTable tr:nth-child(2) { background: #c0c0c022; }
+#rankingTable tr:nth-child(3) { background: #cd7f3222; }
+
+.tier-elite { color: #4caf50; font-weight: bold; }
+.tier-strong { color: #F28C18; font-weight: bold; }
+.tier-support { color: #9fb3c8; }
 
 /* =========================================
-   DARK MODE
-========================================= */
-
-body.dark {
-    background: #111;
-    color: #eee;
-}
-
-body.dark .stats-card,
-body.dark .highlight-card,
-body.dark .club-card,
-body.dark .team-card,
-body.dark .coming-soon-card {
-    background: #1c1c1c;
-}
-
-body.dark th {
-    background: #222;
-}
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 768px) {
-    .team-grid {
-        flex-direction: column;
-    }
-
-    .dashboard-tabs {
-        flex-direction: column;
-    }
-}
-
-#insightCard ul {
-    padding-left: 20px;
-    margin: 0;
-}
-
-#insightCard li {
-    margin-bottom: 8px;
-}
-
-#rankingTable tr:nth-child(1) { background: #ffd70033; }
-#rankingTable tr:nth-child(2) { background: #c0c0c033; }
-#rankingTable tr:nth-child(3) { background: #cd7f3233; }
-
-.tier-elite { color: #2e7d32; font-weight: bold; }
-.tier-strong { color: #f28c18; font-weight: bold; }
-.tier-support { color: #555; }
-
-/* ================================
    ROLE BADGES
-================================ */
+========================================= */
 
 .role-badge {
     padding: 4px 10px;
@@ -332,6 +259,7 @@ body.dark th {
     font-size: 12px;
     font-weight: bold;
     color: white;
+    display: inline-block;
 }
 
 .role-power { background: #d32f2f; }
@@ -343,6 +271,37 @@ body.dark th {
 .role-economy { background: #00838f; }
 .role-workhorse { background: #5d4037; }
 
-.tier-elite { color: #2e7d32; font-weight: bold; }
-.tier-strong { color: #f28c18; font-weight: bold; }
-.tier-support { color: #555; }
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+    .team-grid {
+        flex-direction: column;
+    }
+}
+
+/* =========================================
+   SPOTLIGHT CARD
+========================================= */
+
+.spotlight-card {
+    border: 2px solid #F28C18;
+}
+
+.spotlight-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.spotlight-content h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.spotlight-stats p {
+    margin: 6px 0;
+    font-weight: 500;
+    color: #9fb3c8;
+}

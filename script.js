@@ -36,9 +36,6 @@ function showPage(pageId) {
     document.getElementById(pageId)?.classList.add("active");
 }
 
-function toggleDarkMode() {
-    document.body.classList.toggle("dark");
-}
 
 /* =========================================
    ROUTING
@@ -120,6 +117,7 @@ function loadClubData(club) {
 
         generateInsights();
         renderPerformanceRanking();
+        renderSpotlightPlayer();
     })
     .catch(err => console.error("Data load error:", err));
 }
@@ -387,4 +385,51 @@ function createScatterChart() {
             }
         }
     );
+}
+
+/* =========================================
+   SPOTLIGHT PLAYER
+========================================= */
+
+function renderSpotlightPlayer() {
+
+    if (!battingData.length) return;
+
+    let performance = battingData.map(b => {
+
+        const bowl = bowlingData.find(p => p.PLAYER === b.PLAYER);
+
+        let score =
+            (parseInt(b.RUNS || 0) * 0.4) +
+            (parseFloat(b.AVG || 0) * 10);
+
+        if (bowl) {
+            score += (parseInt(bowl.WICKETS || 0) * 25);
+        }
+
+        return { player: b.PLAYER, score: Math.round(score) };
+    });
+
+    performance.sort((a,b) => b.score - a.score);
+
+    const top = performance[0];
+
+    const bat = battingData.find(p => p.PLAYER === top.player);
+    const bowl = bowlingData.find(p => p.PLAYER === top.player);
+
+    const role = detectPlayerRole(top.player);
+
+    document.getElementById("spotlightName").textContent = top.player;
+
+    document.getElementById("spotlightRole").innerHTML =
+        `<span class="role-badge ${role.class}">${role.label}</span>`;
+
+    document.getElementById("spotlightRuns").textContent =
+        `Runs: ${bat ? bat.RUNS : 0}`;
+
+    document.getElementById("spotlightWickets").textContent =
+        `Wickets: ${bowl ? bowl.WICKETS : 0}`;
+
+    document.getElementById("spotlightScore").textContent =
+        `Performance Index: ${top.score}`;
 }
