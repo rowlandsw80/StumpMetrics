@@ -287,7 +287,9 @@ function renderPerformanceRanking() {
         tbody.innerHTML += `
             <tr>
                 <td>${index+1}</td>
-                <td>${p.player}</td>
+                <td onclick="openPlayerProfile('${p.player}')" style="cursor:pointer;">
+                ${p.player}
+                </td>
                 <td>${p.score}</td>
                 <td><span class="role-badge ${role.class}">${role.label}</span></td>
                 <td class="${tierClass}">${tier}</td>
@@ -423,7 +425,9 @@ function renderSpotlightPlayer() {
 
     const role = detectPlayerRole(top.player);
 
-    document.getElementById("spotlightName").textContent = top.player;
+    const spotlightName = document.getElementById("spotlightName");
+    spotlightName.innerHTML = `<span style="cursor:pointer;">${top.player}</span>`;
+    spotlightName.onclick = () => openPlayerProfile(top.player);
 
     document.getElementById("spotlightRole").innerHTML =
         `<span class="role-badge ${role.class}">${role.label}</span>`;
