@@ -127,13 +127,15 @@ function loadClubData(club) {
 ========================================= */
 
 function renderBattingTable() {
+
     const tbody = document.querySelector("#battingTable tbody");
     if (!tbody) return;
+
     tbody.innerHTML = "";
 
     battingData.forEach(p => {
         tbody.innerHTML += `
-            <tr>
+            <tr onclick="openPlayerProfile('${p.PLAYER}')">
                 <td>${p.PLAYER}</td>
                 <td>${p.RUNS}</td>
                 <td>${p.AVG}</td>
@@ -144,13 +146,15 @@ function renderBattingTable() {
 }
 
 function renderBowlingTable() {
+
     const tbody = document.querySelector("#bowlingTable tbody");
     if (!tbody) return;
+
     tbody.innerHTML = "";
 
     bowlingData.forEach(p => {
         tbody.innerHTML += `
-            <tr>
+            <tr onclick="openPlayerProfile('${p.PLAYER}')">
                 <td>${p.PLAYER}</td>
                 <td>${p.WICKETS}</td>
                 <td>${p["ECONOMY RATE"]}</td>
@@ -432,4 +436,101 @@ function renderSpotlightPlayer() {
 
     document.getElementById("spotlightScore").textContent =
         `Performance Index: ${top.score}`;
+}
+
+/* =========================================
+   PLAYER PROFILE
+========================================= */
+
+let profileBatChart;
+let profileBowlChart;
+
+function openPlayerProfile(playerName) {
+
+    showPage("playerProfile");
+
+    const bat = battingData.find(p => p.PLAYER === playerName);
+    const bowl = bowlingData.find(p => p.PLAYER === playerName);
+
+    document.getElementById("profileName").textContent = playerName;
+
+    const role = detectPlayerRole(playerName);
+
+    document.getElementById("profileRole").innerHTML =
+        `<span class="role-badge ${role.class}">${role.label}</span>`;
+
+    document.getElementById("profileRuns").textContent = bat ? bat.RUNS : 0;
+    document.getElementById("profileAvg").textContent = bat ? bat.AVG : 0;
+    document.getElementById("profileWickets").textContent = bowl ? bowl.WICKETS : 0;
+
+    document.getElementById("profileScore").textContent =
+        calculatePerformanceIndexForPlayer(playerName);
+
+    createProfileCharts(playerName);
+}
+
+function calculatePerformanceIndexForPlayer(name) {
+
+    const bat = battingData.find(p => p.PLAYER === name);
+    const bowl = bowlingData.find(p => p.PLAYER === name);
+
+    let score = 0;
+
+    if (bat) {
+        score += (parseInt(bat.RUNS || 0) * 0.4);
+        score += (parseFloat(bat.AVG || 0) * 10);
+        score += (parseFloat(bat["STRIKE RATE"] || 0) * 0.2);
+    }
+
+    if (bowl) {
+        score += (parseInt(bowl.WICKETS || 0) * 25);
+    }
+
+    return Math.round(score);
+}
+
+function createProfileCharts(name) {
+
+    const bat = battingData.find(p => p.PLAYER === name);
+    const bowl = bowlingData.find(p => p.PLAYER === name);
+
+    if (profileBatChart) profileBatChart.destroy();
+    if (profileBowlChart) profileBowlChart.destroy();
+
+    profileBatChart = new Chart(
+        document.getElementById("profileBatChart"),
+        {
+            type: "bar",
+            data: {
+                labels: ["Runs", "Average", "Strike Rate"],
+                datasets: [{
+                    data: [
+                        bat ? parseInt(bat.RUNS) : 0,
+                        bat ? parseFloat(bat.AVG) : 0,
+                        bat ? parseFloat(bat["STRIKE RATE"]) : 0
+                    ],
+                    backgroundColor: "#F28C18"
+                }]
+            },
+            options: { plugins: { legend: { display: false } } }
+        }
+    );
+
+    profileBowlChart = new Chart(
+        document.getElementById("profileBowlChart"),
+        {
+            type: "bar",
+            data: {
+                labels: ["Wickets", "Economy"],
+                datasets: [{
+                    data: [
+                        bowl ? parseInt(bowl.WICKETS) : 0,
+                        bowl ? parseFloat(bowl["ECONOMY RATE"]) : 0
+                    ],
+                    backgroundColor: "#1F4D2B"
+                }]
+            },
+            options: { plugins: { legend: { display: false } } }
+        }
+    );
 }

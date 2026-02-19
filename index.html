@@ -100,6 +100,7 @@
                     <th>Rank</th>
                     <th>Player</th>
                     <th>Score</th>
+                    <th>Role</th>
                     <th>Tier</th>
                 </tr>
             </thead>
@@ -138,6 +139,48 @@
             </thead>
             <tbody></tbody>
         </table>
+    </div>
+</div>
+
+<!-- PLAYER PROFILE PAGE -->
+<div id="playerProfile" class="page">
+
+    <div class="breadcrumb">
+        <span onclick="openClub('neath')">← Back to Dashboard</span>
+    </div>
+
+    <div class="stats-card">
+        <h2 id="profileName">Player Name</h2>
+        <div id="profileRole"></div>
+    </div>
+
+    <div class="highlights">
+        <div class="highlight-card">
+            <h4>Runs</h4>
+            <p id="profileRuns">0</p>
+        </div>
+        <div class="highlight-card">
+            <h4>Average</h4>
+            <p id="profileAvg">0</p>
+        </div>
+        <div class="highlight-card">
+            <h4>Wickets</h4>
+            <p id="profileWickets">0</p>
+        </div>
+        <div class="highlight-card">
+            <h4>Performance Index</h4>
+            <p id="profileScore">0</p>
+        </div>
+    </div>
+
+    <div class="stats-card">
+        <h3>Batting Profile</h3>
+        <canvas id="profileBatChart"></canvas>
+    </div>
+
+    <div class="stats-card">
+        <h3>Bowling Profile</h3>
+        <canvas id="profileBowlChart"></canvas>
     </div>
 
 </div>
