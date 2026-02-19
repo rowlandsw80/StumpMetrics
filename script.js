@@ -223,6 +223,15 @@ function buildPerformanceTable() {
     return performance.sort((a,b) => b.score - a.score);
 }
 
+function getTeamRank(playerName) {
+
+    const performance = buildPerformanceTable();
+
+    const index = performance.findIndex(p => p.player === playerName);
+
+    return index >= 0 ? index + 1 : "-";
+}
+
 /* =========================================
    ROLE DETECTION
 ========================================= */
@@ -456,6 +465,8 @@ function openPlayerProfile(playerName) {
     const bat = battingData.find(p => p.PLAYER === playerName);
     const bowl = bowlingData.find(p => p.PLAYER === playerName);
 
+    const rank = getTeamRank(playerName);
+
     document.getElementById("profileName").textContent = playerName;
 
     const role = detectPlayerRole(playerName);
@@ -469,6 +480,9 @@ function openPlayerProfile(playerName) {
 
     document.getElementById("profileScore").textContent =
         calculatePerformanceIndexForPlayer(playerName);
+
+    document.getElementById("profileRank").textContent =
+    `#${rank}`;
 
     createProfileCharts(playerName);
 }
