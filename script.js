@@ -232,6 +232,35 @@ function buildPerformanceTable() {
     return performance.sort((a,b) => b.score - a.score);
 }
 
+function calculateVsTeamAverage(playerName) {
+
+    const bat = battingData.find(p => p.PLAYER === playerName);
+    if (!bat) return "-";
+
+    const teamAvgRuns =
+        battingData.reduce((sum, p) => sum + parseInt(p.RUNS || 0), 0)
+        / battingData.length;
+
+    const playerRuns = parseInt(bat.RUNS || 0);
+
+    const diff = Math.round(playerRuns - teamAvgRuns);
+
+    let status = diff > 0 ? "above" : "below";
+
+    return `${Math.abs(diff)} runs ${status} squad average`;
+}
+
+function getTeamRank(playerName) {
+
+    const performance = buildPerformanceTable();
+
+    const index = performance.findIndex(p => p.player === playerName);
+
+    if (index === -1) return "-";
+
+    return `${index + 1} of ${performance.length}`;
+}
+
 function getTeamRank(playerName) {
 
     const performance = buildPerformanceTable();
@@ -241,6 +270,19 @@ function getTeamRank(playerName) {
     return index >= 0 ? index + 1 : "-";
 }
 
+function getPlayerPercentile(playerName) {
+
+    const performance = buildPerformanceTable();
+
+    const index = performance.findIndex(p => p.player === playerName);
+
+    if (index === -1) return "-";
+
+    const percentile =
+        Math.round(((performance.length - index) / performance.length) * 100);
+
+    return `Top ${percentile}%`;
+}
 /* =========================================
    ROLE DETECTION
 ========================================= */
@@ -486,12 +528,25 @@ function openPlayerProfile(playerName) {
     document.getElementById("profileRuns").textContent = bat ? bat.RUNS : 0;
     document.getElementById("profileAvg").textContent = bat ? bat.AVG : 0;
     document.getElementById("profileWickets").textContent = bowl ? bowl.WICKETS : 0;
-
     document.getElementById("profileScore").textContent =
         calculatePerformanceIndexForPlayer(playerName);
-
+    
     document.getElementById("profileRank").textContent =
-    `#${rank}`;
+        getTeamRank(playerName);
+    
+    const comparison = calculateVsTeamAverage(playerName);
+    const compElement = document.getElementById("profileComparison");
+
+    document.getElementById("profilePercentile").textContent =
+        getPlayerPercentile(playerName);
+
+    compElement.textContent = comparison;
+
+    if (comparison.includes("above")) {
+        compElement.style.color = "#4caf50";
+    } else {
+        compElement.style.color = "#ff5252";
+    }  
 
     createProfileCharts(playerName);
 }
@@ -572,6 +627,9 @@ function createSeasonTrendChart(matchData) {
 
     const runsFor = matchData.map(m => parseInt(m.RUNS_FOR));
     const runsAgainst = matchData.map(m => parseInt(m.RUNS_AGAINST));
+    const netRunDiff = matchData.map(m =>
+      parseInt(m.RUNS_FOR) - parseInt(m.RUNS_AGAINST)
+    );
 
     seasonTrendChartInstance = new Chart(
         document.getElementById("seasonTrendChart"),
