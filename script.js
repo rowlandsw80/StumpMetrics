@@ -234,20 +234,46 @@ function buildPerformanceTable() {
 
 function calculateVsTeamAverage(playerName) {
 
+    const role = detectPlayerRole(playerName);
+
     const bat = battingData.find(p => p.PLAYER === playerName);
-    if (!bat) return "-";
+    const bowl = bowlingData.find(p => p.PLAYER === playerName);
 
-    const teamAvgRuns =
-        battingData.reduce((sum, p) => sum + parseInt(p.RUNS || 0), 0)
-        / battingData.length;
+    // If role is bowling-based
+    if (role.class === "role-strike" ||
+        role.class === "role-economy" ||
+        role.class === "role-workhorse") {
 
-    const playerRuns = parseInt(bat.RUNS || 0);
+        if (!bowl) return "-";
 
-    const diff = Math.round(playerRuns - teamAvgRuns);
+        const teamAvgWickets =
+            bowlingData.reduce((sum, p) => sum + parseInt(p.WICKETS || 0), 0)
+            / bowlingData.length;
 
-    let status = diff > 0 ? "above" : "below";
+        const playerWickets = parseInt(bowl.WICKETS || 0);
+        const diff = Math.round(playerWickets - teamAvgWickets);
 
-    return `${Math.abs(diff)} runs ${status} squad average`;
+        let status = diff > 0 ? "above" : "below";
+
+        return `${Math.abs(diff)} wickets ${status} squad average`;
+    }
+
+    // Otherwise default to batting
+    if (bat) {
+
+        const teamAvgRuns =
+            battingData.reduce((sum, p) => sum + parseInt(p.RUNS || 0), 0)
+            / battingData.length;
+
+        const playerRuns = parseInt(bat.RUNS || 0);
+        const diff = Math.round(playerRuns - teamAvgRuns);
+
+        let status = diff > 0 ? "above" : "below";
+
+        return `${Math.abs(diff)} runs ${status} squad average`;
+    }
+
+    return "-";
 }
 
 function getTeamRank(playerName) {
@@ -283,6 +309,25 @@ function getPlayerPercentile(playerName) {
 
     return `Top ${percentile}%`;
 }
+
+function getPlayerTier(playerName) {
+
+    const performance = buildPerformanceTable();
+    const player = performance.find(p => p.player === playerName);
+
+    if (!player) return { label: "-", class: "" };
+
+    if (player.score >= 800) {
+        return { label: "ELITE PLAYER", class: "tier-elite" };
+    } 
+    else if (player.score >= 500) {
+        return { label: "STRONG CONTRIBUTOR", class: "tier-strong" };
+    } 
+    else {
+        return { label: "SQUAD PLAYER", class: "tier-support" };
+    }
+}
+
 /* =========================================
    ROLE DETECTION
 ========================================= */
@@ -525,6 +570,12 @@ function openPlayerProfile(playerName) {
     document.getElementById("profileRole").innerHTML =
         `<span class="role-badge ${role.class}">${role.label}</span>`;
 
+    const tier = getPlayerTier(playerName);
+
+    const tierElement = document.getElementById("profileTier");
+    tierElement.textContent = tier.label;
+    tierElement.className = tier.class;    
+    
     document.getElementById("profileRuns").textContent = bat ? bat.RUNS : 0;
     document.getElementById("profileAvg").textContent = bat ? bat.AVG : 0;
     document.getElementById("profileWickets").textContent = bowl ? bowl.WICKETS : 0;

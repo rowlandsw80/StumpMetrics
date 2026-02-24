@@ -305,3 +305,13 @@ tr:hover {
     font-weight: 500;
     color: #9fb3c8;
 }
+
+/* =========================================
+   PLAYER PROFILE 
+========================================= */
+
+#profileTier {
+    margin-top: 8px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
