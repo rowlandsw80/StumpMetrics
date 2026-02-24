@@ -8,6 +8,7 @@ let bowlingData = [];
 let battingChartInstance = null;
 let bowlingChartInstance = null;
 let scatterChartInstance = null;
+let seasonTrendChartInstance = null;
 
 /* =========================================
    CLUB CONFIG
@@ -120,6 +121,14 @@ function loadClubData(club) {
         renderSpotlightPlayer();
     })
     .catch(err => console.error("Data load error:", err));
+
+    fetch(`data/${club.id}/${club.season}/1xi_match_trends.csv`)
+    .then(r => r.text())
+    .then(text => {
+        const matchData = parseCSV(text);
+        createSeasonTrendChart(matchData);
+    })
+    .catch(err => console.error("Trend load error:", err));
 }
 
 /* =========================================
@@ -549,6 +558,60 @@ function createProfileCharts(name) {
                 }]
             },
             options: { plugins: { legend: { display: false } } }
+        }
+    );
+}
+
+function createSeasonTrendChart(matchData) {
+
+    if (seasonTrendChartInstance) {
+        seasonTrendChartInstance.destroy();
+    }
+
+    const labels = matchData.map((m, i) => `Match ${i + 1}`);
+
+    const runsFor = matchData.map(m => parseInt(m.RUNS_FOR));
+    const runsAgainst = matchData.map(m => parseInt(m.RUNS_AGAINST));
+
+    seasonTrendChartInstance = new Chart(
+        document.getElementById("seasonTrendChart"),
+        {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: "Runs For",
+                        data: runsFor,
+                        borderColor: "#F28C18",
+                        backgroundColor: "rgba(242,140,24,0.1)",
+                        tension: 0.3
+                    },
+                    {
+                        label: "Runs Against",
+                        data: runsAgainst,
+                        borderColor: "#4caf50",
+                        backgroundColor: "rgba(76,175,80,0.1)",
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: "#e6edf3" }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: "#9fb3c8" }
+                    },
+                    y: {
+                        ticks: { color: "#9fb3c8" }
+                    }
+                }
+            }
         }
     );
 }
