@@ -568,7 +568,7 @@ function createSeasonTrendChart(matchData) {
         seasonTrendChartInstance.destroy();
     }
 
-    const labels = matchData.map((m, i) => `Match ${i + 1}`);
+    const labels = matchData.map(m => `${m.DATE} - ${m.OPPOSITION}`);
 
     const runsFor = matchData.map(m => parseInt(m.RUNS_FOR));
     const runsAgainst = matchData.map(m => parseInt(m.RUNS_AGAINST));
