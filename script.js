@@ -724,3 +724,37 @@ function createSeasonTrendChart(matchData) {
         }
     );
 }
+
+/* =========================================
+   TEAM SECTION SWITCHING
+========================================= */
+
+function showTeamSection(section) {
+
+    // Hide all sections
+    document.querySelectorAll(".team-section")
+        .forEach(s => s.classList.remove("active-section"));
+
+    // Remove active styling from all tabs
+    document.querySelectorAll(".team-tab")
+        .forEach(t => t.classList.remove("active-tab"));
+
+    // Show selected section
+    const sectionId =
+        "team" + section.charAt(0).toUpperCase() + section.slice(1);
+
+    const targetSection = document.getElementById(sectionId);
+
+    if (targetSection) {
+        targetSection.classList.add("active-section");
+    }
+
+    // Highlight clicked tab
+    const clickedButton = document.querySelector(
+        `.team-tab[onclick="showTeamSection('${section}')"]`
+    );
+
+    if (clickedButton) {
+        clickedButton.classList.add("active-tab");
+    }
+}

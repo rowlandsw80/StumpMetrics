@@ -56,99 +56,119 @@
     <img id="clubLogo" class="club-logo">
     <h2 class="club-title"></h2>
 
-    <div class="highlights">
-        <div class="highlight-card">
-            <h4>Top Run Scorer</h4>
-            <p id="topRuns">0</p>
-        </div>
-        <div class="highlight-card">
-            <h4>Most Wickets</h4>
-            <p id="topWickets">0</p>
-        </div>
-        <div class="highlight-card">
-            <h4>Performance Leader</h4>
-            <p id="performanceLeader">0</p>
-        </div>
+    <div class="team-nav">
+        <button onclick="showTeamSection('overview')" class="team-tab active-tab">Overview</button>
+        <button onclick="showTeamSection('batting')" class="team-tab">Batting</button>
+        <button onclick="showTeamSection('bowling')" class="team-tab">Bowling</button>
     </div>
 
-<!-- SPOTLIGHT PLAYER -->
-<div class="stats-card spotlight-card">
-    <h3>Player of the Season</h3>
-    <div class="spotlight-content">
-        <div>
-            <h2 id="spotlightName">-</h2>
-            <div id="spotlightRole"></div>
+    <!-- ===================== OVERVIEW ===================== -->
+    <div id="teamOverview" class="team-section active-section">
+
+        <div class="highlights">
+            <div class="highlight-card">
+                <h4>Top Run Scorer</h4>
+                <p id="topRuns">0</p>
+            </div>
+            <div class="highlight-card">
+                <h4>Most Wickets</h4>
+                <p id="topWickets">0</p>
+            </div>
+            <div class="highlight-card">
+                <h4>Performance Leader</h4>
+                <p id="performanceLeader">0</p>
+            </div>
         </div>
-        <div class="spotlight-stats">
-            <p id="spotlightRuns"></p>
-            <p id="spotlightWickets"></p>
-            <p id="spotlightScore"></p>
+
+        <div class="stats-card spotlight-card">
+            <h3>Player of the Season</h3>
+            <div class="spotlight-content">
+                <div>
+                    <h2 id="spotlightName">-</h2>
+                    <div id="spotlightRole"></div>
+                </div>
+                <div class="spotlight-stats">
+                    <p id="spotlightRuns"></p>
+                    <p id="spotlightWickets"></p>
+                    <p id="spotlightScore"></p>
+                </div>
+            </div>
         </div>
+
+        <div class="stats-card">
+            <h3>Performance Insights</h3>
+            <ul id="insightList"></ul>
+        </div>
+
+        <div class="stats-card">
+            <h3>Performance Rankings</h3>
+            <table id="rankingTable">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Score</th>
+                        <th>Role</th>
+                        <th>Tier</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="stats-card">
+            <h3>Season Performance Trend</h3>
+            <canvas id="seasonTrendChart"></canvas>
+        </div>
+
     </div>
+
+    <!-- ===================== BATTING ===================== -->
+    <div id="teamBatting" class="team-section">
+
+        <div class="stats-card">
+            <h3>Batting</h3>
+            <canvas id="battingChart"></canvas>
+            <canvas id="scatterChart"></canvas>
+            <table id="battingTable">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Runs</th>
+                        <th>Average</th>
+                        <th>Strike Rate</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- ===================== BOWLING ===================== -->
+    <div id="teamBowling" class="team-section">
+
+        <div class="stats-card">
+            <h3>Bowling</h3>
+            <canvas id="bowlingChart"></canvas>
+            <table id="bowlingTable">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Wickets</th>
+                        <th>Economy</th>
+                        <th>Average</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+    </div>
+
 </div>
 
-    <div class="stats-card">
-        <h3>Performance Insights</h3>
-        <ul id="insightList"></ul>
-    </div>
-
-    <div class="stats-card">
-        <h3>Performance Rankings</h3>
-        <table id="rankingTable">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Player</th>
-                    <th>Score</th>
-                    <th>Role</th>
-                    <th>Tier</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <div class="stats-card">
-        <h3>Batting</h3>
-        <canvas id="battingChart"></canvas>
-        <canvas id="scatterChart"></canvas>
-        <table id="battingTable">
-            <thead>
-                <tr>
-                    <th>Player</th>
-                    <th>Runs</th>
-                    <th>Average</th>
-                    <th>Strike Rate</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <div class="stats-card">
-        <h3>Bowling</h3>
-        <canvas id="bowlingChart"></canvas>
-        <table id="bowlingTable">
-            <thead>
-                <tr>
-                    <th>Player</th>
-                    <th>Wickets</th>
-                    <th>Economy</th>
-                    <th>Average</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <!-- SEASON TRENDS -->
-    <div class="stats-card">
-      <h3>Season Performance Trend</h3>
-      <canvas id="seasonTrendChart"></canvas>
-    </div>
-</div>
-
-<!-- PLAYER PROFILE PAGE -->
+<!-- ===================== PLAYER PROFILE PAGE ===================== -->
 <div id="playerProfile" class="page">
 
     <div class="breadcrumb">
@@ -162,35 +182,35 @@
     </div>
 
     <div class="highlights">
-    <div class="highlight-card">
-        <h4>Runs</h4>
-        <p id="profileRuns">0</p>
+        <div class="highlight-card">
+            <h4>Runs</h4>
+            <p id="profileRuns">0</p>
+        </div>
+        <div class="highlight-card">
+            <h4>Average</h4>
+            <p id="profileAvg">0</p>
+        </div>
+        <div class="highlight-card">
+            <h4>Wickets</h4>
+            <p id="profileWickets">0</p>
+        </div>
+        <div class="highlight-card">
+            <h4>Performance Index</h4>
+            <p id="profileScore">0</p>
+        </div>
+        <div class="highlight-card">
+            <h4>Team Rank</h4>
+            <p id="profileRank">-</p>
+        </div>
+        <div class="highlight-card">
+            <h4>Vs Team Average</h4>
+            <p id="profileComparison">-</p>
+        </div>
+        <div class="highlight-card">
+            <h4>Squad Percentile</h4>
+            <p id="profilePercentile">-</p>
+        </div>
     </div>
-    <div class="highlight-card">
-        <h4>Average</h4>
-        <p id="profileAvg">0</p>
-    </div>
-    <div class="highlight-card">
-        <h4>Wickets</h4>
-        <p id="profileWickets">0</p>
-    </div>
-    <div class="highlight-card">
-        <h4>Performance Index</h4>
-        <p id="profileScore">0</p>
-    </div>
-    <div class="highlight-card">
-        <h4>Team Rank</h4>
-        <p id="profileRank">-</p>
-    </div>
-    <div class="highlight-card">
-    <h4>Vs Team Average</h4>
-    <p id="profileComparison">-</p>
-    </div>
-    <div class="highlight-card">
-    <h4>Squad Percentile</h4>
-    <p id="profilePercentile">-</p>
-  </div>
-</div>
 
     <div class="stats-card">
         <h3>Batting Profile</h3>

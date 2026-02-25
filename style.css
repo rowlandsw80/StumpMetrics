@@ -307,6 +307,43 @@ tr:hover {
 }
 
 /* =========================================
+   TEAM SECTION NAVIGATION
+========================================= */
+
+.team-nav {
+    margin: 25px 0;
+    display: flex;
+    gap: 12px;
+}
+
+.team-tab {
+    padding: 8px 16px;
+    border: none;
+    background: #1f2a3a;
+    color: #e6edf3;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.2s ease;
+}
+
+.team-tab:hover {
+    background: #263449;
+}
+
+.active-tab {
+    background: #F28C18;
+    color: white;
+}
+
+.team-section {
+    display: none;
+}
+
+.team-section.active-section {
+    display: block;
+}
+
+/* =========================================
    PLAYER PROFILE 
 ========================================= */
 
