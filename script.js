@@ -374,7 +374,12 @@ function renderPerformanceRanking() {
 
     const performance = buildPerformanceTable();
 
-    performance.forEach((p,index) => {
+    // 🔹 Calculate squad average score
+    const squadAvg =
+    performance.reduce((sum, p) => sum + Number(p.score || 0), 0) 
+    / performance.length;
+
+    performance.forEach((p, index) => {
 
         let tier = "Contributor";
         let tierClass = "tier-support";
@@ -389,15 +394,28 @@ function renderPerformanceRanking() {
 
         const role = detectPlayerRole(p.player);
 
+        // 🔹 Form indicator logic
+        let formIcon = "▬";
+        let formClass = "";
+
+        if (p.score > squadAvg * 1.1) {
+            formIcon = "▲";
+            formClass = "form-up";
+        } else if (p.score < squadAvg * 0.9) {
+            formIcon = "▼";
+            formClass = "form-down";
+        }
+
         tbody.innerHTML += `
             <tr>
-                <td>${index+1}</td>
+                <td>${index + 1}</td>
                 <td onclick="openPlayerProfile('${p.player}')" style="cursor:pointer;">
-                ${p.player}
+                    ${p.player}
                 </td>
                 <td>${p.score}</td>
                 <td><span class="role-badge ${role.class}">${role.label}</span></td>
                 <td class="${tierClass}">${tier}</td>
+                <td class="${formClass}">${formIcon}</td>
             </tr>
         `;
     });
