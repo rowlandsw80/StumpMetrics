@@ -366,3 +366,29 @@ tr:hover {
     color: #ff5252;
     font-weight: bold;
 }
+
+/* =========================================
+   BEST XI GRID
+========================================= */
+
+.best-xi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.best-xi-player {
+    background: #1f2a3a;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.best-xi-player span {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #9fb3c8;
+}

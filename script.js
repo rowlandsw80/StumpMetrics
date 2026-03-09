@@ -121,6 +121,7 @@ function loadClubData(club) {
         generateInsights();
         renderPerformanceRanking();
         renderSpotlightPlayer();
+        generateBestXI();
     })
     .catch(err => console.error("Data load error:", err));
 
@@ -443,6 +444,32 @@ function renderPerformanceRanking() {
                 <td class="${tierClass}">${tier}</td>
                 <td class="${formClass}">${formIcon}</td>
             </tr>
+        `;
+    });
+}
+
+/* =========================================
+   BEST XI GENERATOR
+========================================= */
+
+function generateBestXI() {
+
+    const container = document.getElementById("bestXI");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    const performance = buildPerformanceTable().slice(0,11);
+
+    performance.forEach(player => {
+
+        const role = detectPlayerRole(player.player);
+
+        container.innerHTML += `
+            <div class="best-xi-player" onclick="openPlayerProfile('${player.player}')" style="cursor:pointer;">
+                <strong>${player.player}</strong>
+                <span>${role.label}</span>
+            </div>
         `;
     });
 }
