@@ -10,6 +10,8 @@ let bowlingChartInstance = null;
 let scatterChartInstance = null;
 let seasonTrendChartInstance = null;
 
+let bestXIPlayers = [];
+
 /* =========================================
    CLUB CONFIG
 ========================================= */
@@ -119,9 +121,10 @@ function loadClubData(club) {
         createPerformanceChart();
 
         generateInsights();
+        generateBestXI();
         renderPerformanceRanking();
         renderSpotlightPlayer();
-        generateBestXI();
+        
     })
     .catch(err => console.error("Data load error:", err));
 
@@ -403,8 +406,8 @@ function renderPerformanceRanking() {
 
     // 🔹 Calculate squad average score
     const squadAvg =
-    performance.reduce((sum, p) => sum + Number(p.score || 0), 0) 
-    / performance.length;
+        performance.reduce((sum, p) => sum + Number(p.score || 0), 0) 
+        / performance.length;
 
     performance.forEach((p, index) => {
 
@@ -421,6 +424,11 @@ function renderPerformanceRanking() {
 
         const role = detectPlayerRole(p.player);
 
+        // 🔹 Check if player is in Best XI
+        const isBestXI = bestXIPlayers.some(player =>
+          player.name === p.player && player.score === p.score
+        );
+
         // 🔹 Form indicator logic
         let formIcon = "▬";
         let formClass = "";
@@ -434,7 +442,7 @@ function renderPerformanceRanking() {
         }
 
         tbody.innerHTML += `
-            <tr>
+            <tr class="${isBestXI ? 'best-xi-highlight' : ''}">
                 <td>${index + 1}</td>
                 <td onclick="openPlayerProfile('${p.player}')" style="cursor:pointer;">
                     ${p.player}
@@ -461,12 +469,20 @@ function generateBestXI() {
 
     const performance = buildPerformanceTable().slice(0,11);
 
+    // Store both player name and score
+    bestXIPlayers = performance.map(p => ({
+        name: p.player,
+        score: p.score
+    }));
+
     performance.forEach(player => {
 
         const role = detectPlayerRole(player.player);
 
         container.innerHTML += `
-            <div class="best-xi-player" onclick="openPlayerProfile('${player.player}')" style="cursor:pointer;">
+            <div class="best-xi-player"
+                 onclick="openPlayerProfile('${player.player}')"
+                 style="cursor:pointer;">
                 <strong>${player.player}</strong>
                 <span>${role.label}</span>
             </div>

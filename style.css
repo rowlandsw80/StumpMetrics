@@ -392,3 +392,8 @@ tr:hover {
     font-size: 12px;
     color: #9fb3c8;
 }
+
+.best-xi-highlight {
+    background: rgba(242,140,24,0.15);
+    border-left: 4px solid #F28C18;
+}
