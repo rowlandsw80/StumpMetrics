@@ -111,10 +111,12 @@ function loadClubData(club) {
         calculateBattingHighlights();
         calculateBowlingHighlights();
         calculatePerformanceIndex();
+        calculateSquadMetrics();
 
         createBattingChart();
         createBowlingChart();
         createScatterChart();
+        createPerformanceChart();
 
         generateInsights();
         renderPerformanceRanking();
@@ -195,6 +197,30 @@ function calculateBowlingHighlights() {
     );
 
     document.getElementById("topWickets").textContent = top.WICKETS;
+}
+
+function calculateSquadMetrics() {
+
+    if (!battingData.length || !bowlingData.length) return;
+
+    const totalRuns = battingData.reduce((sum,p) =>
+        sum + parseInt(p.RUNS || 0), 0);
+
+    const totalWickets = bowlingData.reduce((sum,p) =>
+        sum + parseInt(p.WICKETS || 0), 0);
+
+    const squadAvg =
+        battingData.reduce((sum,p) =>
+            sum + parseFloat(p.AVG || 0), 0) / battingData.length;
+
+    const squadEco =
+        bowlingData.reduce((sum,p) =>
+            sum + parseFloat(p["ECONOMY RATE"] || 0), 0) / bowlingData.length;
+
+    document.getElementById("squadRuns").textContent = totalRuns;
+    document.getElementById("squadWickets").textContent = totalWickets;
+    document.getElementById("squadAvg").textContent = squadAvg.toFixed(2);
+    document.getElementById("squadEco").textContent = squadEco.toFixed(2);
 }
 
 /* =========================================
@@ -432,16 +458,43 @@ function generateInsights() {
 
     list.innerHTML = "";
 
-    const topBat = battingData.reduce((a,b) =>
+    if (!battingData.length || !bowlingData.length) return;
+
+    const topRuns = battingData.reduce((a,b) =>
         parseInt(a.RUNS) > parseInt(b.RUNS) ? a : b
     );
 
-    const topBowl = bowlingData.reduce((a,b) =>
+    const bestAverage = battingData.reduce((a,b) =>
+        parseFloat(a.AVG) > parseFloat(b.AVG) ? a : b
+    );
+
+    const bestStrikeRate = battingData.reduce((a,b) =>
+        parseFloat(a["STRIKE RATE"]) > parseFloat(b["STRIKE RATE"]) ? a : b
+    );
+
+    const topWickets = bowlingData.reduce((a,b) =>
         parseInt(a.WICKETS) > parseInt(b.WICKETS) ? a : b
     );
 
-    list.innerHTML += `<li>${topBat.PLAYER} leads with ${topBat.RUNS} runs.</li>`;
-    list.innerHTML += `<li>${topBowl.PLAYER} leads with ${topBowl.WICKETS} wickets.</li>`;
+    const bestEconomy = bowlingData.reduce((a,b) =>
+        parseFloat(a["ECONOMY RATE"]) < parseFloat(b["ECONOMY RATE"]) ? a : b
+    );
+
+    const performance = buildPerformanceTable();
+    const bestOverall = performance[0];
+
+    const insights = [
+        `${topRuns.PLAYER} leads the run charts with ${topRuns.RUNS} runs.`,
+        `${bestAverage.PLAYER} has the best batting average (${bestAverage.AVG}).`,
+        `${bestStrikeRate.PLAYER} has the highest strike rate (${bestStrikeRate["STRIKE RATE"]}).`,
+        `${topWickets.PLAYER} leads the bowling attack with ${topWickets.WICKETS} wickets.`,
+        `${bestEconomy.PLAYER} has the best economy rate (${bestEconomy["ECONOMY RATE"]}).`,
+        `${bestOverall.player} is currently the top overall performer with a score of ${bestOverall.score}.`
+    ];
+
+    insights.forEach(text => {
+        list.innerHTML += `<li>${text}</li>`;
+    });
 }
 
 /* =========================================
@@ -510,6 +563,47 @@ function createScatterChart() {
                 scales:{
                     x:{ title:{ display:true, text:"Average" }},
                     y:{ title:{ display:true, text:"Strike Rate" }}
+                }
+            }
+        }
+    );
+}
+
+function createPerformanceChart() {
+
+    const performance = buildPerformanceTable().slice(0,10);
+
+    const labels = performance.map(p => p.player);
+    const scores = performance.map(p => p.score);
+
+    if (window.performanceChartInstance) {
+        window.performanceChartInstance.destroy();
+    }
+
+    window.performanceChartInstance = new Chart(
+        document.getElementById("performanceChart"),
+        {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Performance Index",
+                    data: scores,
+                    backgroundColor: "#F28C18"
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: "#9fb3c8" }
+                    },
+                    y: {
+                        ticks: { color: "#9fb3c8" }
+                    }
                 }
             }
         }
