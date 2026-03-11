@@ -213,13 +213,23 @@ function calculateSquadMetrics() {
     const totalWickets = bowlingData.reduce((sum,p) =>
         sum + parseInt(p.WICKETS || 0), 0);
 
+    // 🔹 Only include players with real batting averages
+    const validBatters = battingData.filter(p =>
+        !isNaN(parseFloat(p.AVG))
+    );
+
     const squadAvg =
-        battingData.reduce((sum,p) =>
-            sum + parseFloat(p.AVG || 0), 0) / battingData.length;
+        validBatters.reduce((sum,p) =>
+            sum + parseFloat(p.AVG), 0) / validBatters.length;
+
+    // 🔹 Only include bowlers with real economy rates
+    const validBowlers = bowlingData.filter(p =>
+        !isNaN(parseFloat(p["ECONOMY RATE"]))
+    );
 
     const squadEco =
-        bowlingData.reduce((sum,p) =>
-            sum + parseFloat(p["ECONOMY RATE"] || 0), 0) / bowlingData.length;
+        validBowlers.reduce((sum,p) =>
+            sum + parseFloat(p["ECONOMY RATE"]), 0) / validBowlers.length;
 
     document.getElementById("squadRuns").textContent = totalRuns;
     document.getElementById("squadWickets").textContent = totalWickets;
@@ -243,20 +253,40 @@ function calculatePerformanceIndex() {
 
 function buildPerformanceTable() {
 
+    // 🔹 Determine max innings in squad
+    const maxInnings = Math.max(...battingData.map(p =>
+        parseInt(p.INNINGS || 0)
+    ));
+
     let performance = battingData.map(b => {
 
         const bowl = bowlingData.find(p => p.PLAYER === b.PLAYER);
 
+        const runs = parseInt(b.RUNS || 0);
+        const avg = parseFloat(b.AVG || 0);
+        const sr = parseFloat(b["STRIKE RATE"] || 0);
+        const innings = parseInt(b.INNINGS || 0);
+
         let score =
-            (parseInt(b.RUNS || 0) * 0.4) +
-            (parseFloat(b.AVG || 0) * 10) +
-            (parseFloat(b["STRIKE RATE"] || 0) * 0.2);
+            (runs * 0.4) +
+            (avg * 10) +
+            (sr * 0.2);
 
         if (bowl) {
             score += (parseInt(bowl.WICKETS || 0) * 25);
         }
 
-        return { player: b.PLAYER, score: Math.round(score) };
+        // 🔹 Participation weighting
+        const participationFactor = maxInnings > 0
+            ? innings / maxInnings
+            : 1;
+
+        score = score * participationFactor;
+
+        return {
+            player: b.PLAYER,
+            score: Math.round(score)
+        };
     });
 
     return performance.sort((a,b) => b.score - a.score);
@@ -431,15 +461,18 @@ function renderPerformanceRanking() {
 
         // 🔹 Form indicator logic
         let formIcon = "▬";
-        let formClass = "";
+        let formClass = "form-average";
 
-        if (p.score > squadAvg * 1.1) {
+        const ratio = p.score / squadAvg;
+
+        if (ratio > 1.25) {
             formIcon = "▲";
             formClass = "form-up";
-        } else if (p.score < squadAvg * 0.9) {
+        }
+        else if (ratio < 0.75) {
             formIcon = "▼";
             formClass = "form-down";
-        }
+        } 
 
         tbody.innerHTML += `
             <tr class="${isBestXI ? 'best-xi-highlight' : ''}">
@@ -503,25 +536,61 @@ function generateInsights() {
 
     if (!battingData.length || !bowlingData.length) return;
 
-    const topRuns = battingData.reduce((a,b) =>
+    // 🔹 Filter batters with real stats
+    const qualifiedBatters = battingData.filter(p => {
+        const innings = parseInt(p.INNINGS || 0);
+        const avg = parseFloat(p.AVG);
+        const sr = parseFloat(p["STRIKE RATE"]);
+
+        return (
+            innings >= 4 &&
+            !isNaN(avg) &&
+            avg > 0 &&
+            !isNaN(sr)
+        );
+    });
+
+    // 🔹 Filter bowlers with real stats
+    const qualifiedBowlers = bowlingData.filter(p => {
+        const overs = parseFloat(p.OVERS || 0);
+        const eco = parseFloat(p["ECONOMY RATE"]);
+
+        return (
+            overs >= 10 &&
+            !isNaN(eco) &&
+            eco > 0
+        );
+    });
+
+    // 🔹 Fallback if filters remove too many players
+    const batPool = qualifiedBatters.length ? qualifiedBatters : battingData;
+    const bowlPool = qualifiedBowlers.length ? qualifiedBowlers : bowlingData;
+
+    const topRuns = batPool.reduce((a,b) =>
         parseInt(a.RUNS) > parseInt(b.RUNS) ? a : b
     );
 
-    const bestAverage = battingData.reduce((a,b) =>
-        parseFloat(a.AVG) > parseFloat(b.AVG) ? a : b
-    );
+    const bestAverage = batPool
+        .filter(p => !isNaN(parseFloat(p.AVG)))
+        .reduce((a,b) =>
+            parseFloat(a.AVG) > parseFloat(b.AVG) ? a : b
+        );
 
-    const bestStrikeRate = battingData.reduce((a,b) =>
-        parseFloat(a["STRIKE RATE"]) > parseFloat(b["STRIKE RATE"]) ? a : b
-    );
+    const bestStrikeRate = batPool
+        .filter(p => !isNaN(parseFloat(p["STRIKE RATE"])))
+        .reduce((a,b) =>
+            parseFloat(a["STRIKE RATE"]) > parseFloat(b["STRIKE RATE"]) ? a : b
+        );
 
-    const topWickets = bowlingData.reduce((a,b) =>
+    const topWickets = bowlPool.reduce((a,b) =>
         parseInt(a.WICKETS) > parseInt(b.WICKETS) ? a : b
     );
 
-    const bestEconomy = bowlingData.reduce((a,b) =>
-        parseFloat(a["ECONOMY RATE"]) < parseFloat(b["ECONOMY RATE"]) ? a : b
-    );
+    const bestEconomy = bowlPool
+        .filter(p => !isNaN(parseFloat(p["ECONOMY RATE"])))
+        .reduce((a,b) =>
+            parseFloat(a["ECONOMY RATE"]) < parseFloat(b["ECONOMY RATE"]) ? a : b
+        );
 
     const performance = buildPerformanceTable();
     const bestOverall = performance[0];

@@ -362,6 +362,11 @@ tr:hover {
     font-weight: bold;
 }
 
+.form-average {
+    color: #9fb3c8;
+    font-weight: bold;
+}
+
 .form-down {
     color: #ff5252;
     font-weight: bold;
